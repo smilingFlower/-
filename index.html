@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>3d相册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+
+
+    <!-- 在引入lib-flexible需要执行的JS之前，可以手动设置meta来控制dpr值 -->
+    <meta content="maximum-dpr=2" name="flexible" />
+    <!-- 淘宝移动自适应js -->
+    <script type="text/javascript" src="js/build/flexible_css.js"></script>
+    <script type="text/javascript" src="js/build/flexible.js"></script>
+
+
+    <!-- 重置浏览器样式 -->
+    <link rel="stylesheet" type="text/css" href="css/build/normalize.css">   
+
+    <!-- 滑动图片样式 -->
+    <link rel="stylesheet" type="text/css" href="css/swipePhoto.css">   
+
+    <!-- 页面样式 -->
+    <link rel="stylesheet" type="text/css" href="css/main.css">   
+
+</head>
+<body>
+    <div class="page-ground">    
+        <div class="page page1">  
+            <div class="photo-thumbnail-wrap" id="photo-thumbnail-wrap">
+                <div class="item">
+                    <img src="images/1.jpg">
+                </div>
+                <div class="item">
+                    <img src="images/2.jpg">
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="photo-wrap hidden" id="photo-wrap">  <!-- 图片预览容器 -->
+
+    </div>  
+    <div class="close hidden"></div>
+    <div class="overlay hidden"></div>
+<script type="text/javascript" src="js/build/zepto.min.js"></script>
+<script type="text/javascript" src="js/swipePhoto.js"></script>
+<script type="text/javascript">
+    // var parentTarget = document.getElementById("photo-wrap");
+    // var swipePhotoParent = document.getElementById("photo-thumbnail-wrap");
+    // var swipePhotoItem = framework.getChildsByClass(swipePhotoParent,"item");
+
+    // for(var i = 0; i<swipePhotoItem.length; i++){
+    //     (function(i){
+    //         swipePhotoItem[i].onclick = function(){
+    //             framework.removeClass(parentTarget,"hidden");
+    //         }           
+    //     })(i)
+    // }
+
+    // var openSwipePhoto = new swipePhoto(items);
+
+    var items = [
+        ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+        ["images/2.jpg","images/1.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+        ["images/3.jpg","images/4.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+        ["images/4.jpg","images/3.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+        ["images/5.jpg","images/6.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+        ["images/6.jpg","images/5.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
+    ]
+
+
+    var initSwipePhotoFromDOM = function(entranceSelector,gallerySelector,items){
+
+        var entranceSelector = entranceSelector,
+            gallerySelector = gallerySelector,
+            items = items;
+
+        var options = {
+            imgTarget:document.getElementById("lar-img")
+        }
+
+        var parseElements = function(gallerySelector){
+            var thumbEl = gallerySelector.childNodes,
+                item = [];
+
+            for(var i = 0; i<thumbEl.length; i++){
+                if (thumbEl[i].nodeType === 1) {
+                    item.push(thumbEl[i]);
+                }
+            }
+
+            return item;
+        }    
+
+        var openSwipePhoto = function(items){
+            var gallery = new swipePhoto(gallerySelector,items,options); 
+            gallery.init();
+        }
+
+
+        var entranceEl = parseElements(entranceSelector);
+        for(var i = 0; i<entranceEl.length; i++){
+            (function(i){
+                entranceEl[i].onclick = function(){
+                    $(gallerySelector).removeClass("hidden");
+                    openSwipePhoto(items[i]);
+                }         
+            })(i)
+        } 
+
+    }
+
+
+    var entranceSelector = document.getElementById("photo-thumbnail-wrap");
+    var grllerySelector = document.getElementById("photo-wrap");
+    initSwipePhotoFromDOM(entranceSelector,grllerySelector,items);
+
+</script>
+</body>
+</html>
+
+
+
+
+<!-- 注意：
+
+手指在滑动整个屏幕时，会影响浏览器的行为，比如滚动和缩放。所以在调用touch事件时，要注意禁止缩放和滚动。
+
+1.禁止缩放
+
+通过meta元标签来设置。
+
+<meta name="viewport" content="target-densitydpi=320,width=640,user-scalable=no">
+
+2.禁止滚动
+
+preventDefault是阻止默认行为，touch事件的默认行为就是滚动。
+
+event.preventDefault(); -->

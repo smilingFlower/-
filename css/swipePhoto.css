@@ -1,0 +1,48 @@
+.hidden{
+	display: none;
+}
+.visible{
+	display: block;
+}
+.overlay{ /*用于遮挡背景*/
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 333;
+  background-color: rgba(0,0,0,.6);
+}
+#photo-wrap{
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 334;
+}
+#photo-wrap .item img{
+	height: 100%;
+}
+.close{
+	position: absolute;
+	top: 22px;
+	right: 22px;
+	z-index: 335;
+
+  width: 22px;
+  height: 22px;
+  background: url(../img/close.png) center center no-repeat;            
+  background-size: cover;
+}
+.close:after{
+	position: absolute;
+	content: "";
+
+	top: -10px;
+	left: -10px;
+	right: -10px;
+	bottom: -10px;
+}
