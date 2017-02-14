@@ -36,27 +36,16 @@
             </div>
         </div>
     </div>
-    <div class="photo-wrap hidden" id="photo-wrap">  <!-- 图片预览容器 -->
-
+    <div class="swiper-container hidden" id="swiper-container">  <!-- 图片预览容器 -->
+        <div class="swiper-wrapper">
+                                              
+        </div>
     </div>  
     <div class="close hidden"></div>
     <div class="overlay hidden"></div>
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
 <script type="text/javascript" src="js/swipePhoto.js"></script>
 <script type="text/javascript">
-    // var parentTarget = document.getElementById("photo-wrap");
-    // var swipePhotoParent = document.getElementById("photo-thumbnail-wrap");
-    // var swipePhotoItem = framework.getChildsByClass(swipePhotoParent,"item");
-
-    // for(var i = 0; i<swipePhotoItem.length; i++){
-    //     (function(i){
-    //         swipePhotoItem[i].onclick = function(){
-    //             framework.removeClass(parentTarget,"hidden");
-    //         }           
-    //     })(i)
-    // }
-
-    // var openSwipePhoto = new swipePhoto(items);
 
     var items = [
         ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
@@ -111,7 +100,7 @@
 
 
     var entranceSelector = document.getElementById("photo-thumbnail-wrap");
-    var grllerySelector = document.getElementById("photo-wrap");
+    var grllerySelector = document.getElementById("swiper-container");
     initSwipePhotoFromDOM(entranceSelector,grllerySelector,items);
 
 </script>

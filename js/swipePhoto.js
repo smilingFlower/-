@@ -1,15 +1,13 @@
 'use strict';
 var framework = {
-    getChildsByClass: function(parentEl,childClassName){
-        var item = [];
+    getChildByClass: function(parentEl, childClassName) {
         var node = parentEl.firstChild;
-        for (var i = 0; i< parentEl.childNodes.length; i++) {
-            if (framework.hasClass(node,"item")) {
-                item.push(parentEl.childNodes[i]);
+        while (node) {
+            if (framework.hasClass(node, childClassName)) {
+                return node;
             }
             node = node.nextSibling;
-        }    
-        return item;
+        }
     },
 
     hasClass: function(el, className) {
@@ -72,9 +70,13 @@ var framework = {
         framework.bind(target,eventtype,listener,true);
     },
 
-    createEl:function(parentEl,html){  //html 字符串
-        parentEl.innerHTML = html;
-    }
+    createEl: function(classes, tag) {
+        var el = document.createElement(tag || 'div');
+        if (classes) {
+            el.className = classes;
+        }
+        return el;
+    },
 }
 
 /**
@@ -86,29 +88,25 @@ var framework = {
  */
 var swipePhoto = function(gallerySelector,items,options){
 
-    var self = this;
+    var self = this,
+        direction = "horizontal";
 
     //设置图片的样式
     var setImageSize = function(target, maxRes) {
 
     };
 
-    //修改图片路径
-    var modifyImageSrc = function(imgTarget,item){
-        console.log(imgTarget);
-        imgTarget.setAttribute("src",item);
-    };  
-
-    var animations = function(){
-
-    };
+    // //修改图片路径
+    // var modifyImageSrc = function(imgTarget,item){
+    //     console.log(imgTarget);
+    //     imgTarget.setAttribute("src",item);
+    // };  
 
 
-    var slider = function(gallerySelector,imgTarget,items){
+    var slider = function(gallerySelector,items){
         var traget = gallerySelector, //滑动的元素
-            imgTarget = imgTarget,
             items = items,
-            index = 0,
+            currentIndex = 0,
             startX,
             startY,
             moveEndX,
@@ -117,22 +115,34 @@ var swipePhoto = function(gallerySelector,items,options){
             Y,  //移动y的距离
             thouchDirection;
 
+        var updateProgress = function(translate){
+            if (typeof translate === "undefined") {
+                return;
+            }
+        }
+
+        var setWrapperTranslate = function(translate){
+            if (typeof translate === "undefined") {
+                return;
+            }
+        }
+
         var touchstartFun = function(e){
             console.log("touchstart");
             e.preventDefault();
 
             // e.targetTouches[0].pageX
-            startX = e.changedTouches[0].pageX;
-            startY = e.changedTouches[0].pageY;
+            startX = e.targetTouches[0].pageX;
+            startY = e.targetTouches[0].pageY;
         }
 
         var touchmoveFun = function(e){
             console.log("touchmove");
             e.preventDefault();
 
-            moveEndX = e.changedTouches[0].pageX;
-            moveEndY = e.changedTouches[0].pageX;
-            debugger
+            moveEndX = e.targetTouches[0].pageX;
+            moveEndY = e.targetTouches[0].pageY;
+
             X = moveEndX - startX;
             Y = moveEndY - startY;
 
@@ -144,62 +154,50 @@ var swipePhoto = function(gallerySelector,items,options){
             console.log("touchend");
             e.preventDefault();
 
-            // if (Math.abs(X) > Math.abs(Y) && X > 0) {
-            //     console.log("向 右 滑动");
-            //     thouchDirection = "right";
-            // }else if(Math.abs(X) > Math.abs(Y) && X < 0) {
-            //     console.log("向 左 滑动");
-            //     thouchDirection = "left";
-            // }else if(Math.abs(X) < Math.abs(Y) && Y > 0) {
-            //     console.log("向 下 滑动");
-            //     thouchDirection = "bottom";
-            // }else if(Math.abs(X) < Math.abs(Y) && Y < 0) {
-            //     console.log("向 上 滑动");
-            //     thouchDirection = "top";
-            // }else{
-            //     thouchDirection = "justTouch";           
-            // }
+            var moveDistanceY = Y < 0 ? -Y : Y;
 
 
-
-
-
-            if (thouchDirection === "right") {
-                console.log("right");
-                console.log(index);
-                if (index === 1) {
-                    return false;
-                }
-                modifyImageSrc(imgTarget,items[index]);
-                index++;
-            }else if(thouchDirection === "left"){
-                console.log("left");
-                console.log(items.length);
-                if (index === items.length) {
-                    return false;
-                }
-                modifyImageSrc(imgTarget,items[index]);
-                index--;
+            if (moveDistanceY > 50) {
+                return false;
             }
 
-            //unbindEvent();
+            if (direction === "horizontal") {
+                if  ( X > 5 ) {
+                    console.log("向右滑动");
+                }else if( X < -5 ){
+                    console.log("向左滑动");
+                }
+            }
+
         }
 
         var bindEvent = function(){
+            // framework.bind(traget,'click',function(e){
+            //     console.log(e.pageX);
+            //     console.log(e.pageY);
+            // });
             framework.bind(traget,'touchstart',touchstartFun);
             framework.bind(traget,'touchmove',touchmoveFun);
             framework.bind(traget,'touchend',touchendFun);           
         }
 
-        // var unbindEvent = function(){
-        //     framework.unbind(traget,'touchstart',touchstartFun);
-        //     framework.unbind(traget,'touchmove',touchmoveFun);
-        //     framework.unbind(traget,'touchend',touchendFun);           
-        // }
+        var addhtml = function(){
+            var parent = framework.getChildByClass(traget,"swiper-wrapper");
+            var html = "";
+            for(var i = 0; i< items.length; i++){
+                html += '<div class="swiper-slide"> <img src="'+ items[i] +'"> </div>';
+            }
+            parent.innerHTML = html;
+        }
+
+        var unbindEvent = function(){
+            framework.unbind(traget,'touchstart',touchstartFun);
+            framework.unbind(traget,'touchmove',touchmoveFun);
+            framework.unbind(traget,'touchend',touchendFun);           
+        }
 
         var init = function(){
-            modifyImageSrc(imgTarget,items[index]);
-            index ++;
+            addhtml();
             bindEvent();
         }
 
@@ -210,7 +208,7 @@ var swipePhoto = function(gallerySelector,items,options){
     var publicMethods = {
         options:options,
         init:function(){
-            slider(gallerySelector,this.options.imgTarget,items);
+            slider(gallerySelector,items);
         }
     }
 
