@@ -40,8 +40,8 @@
         <div class="swiper-wrapper">
                                               
         </div>
+        <div class="close"></div>
     </div>  
-    <div class="close hidden"></div>
     <div class="overlay hidden"></div>
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
 <script type="text/javascript" src="js/swipePhoto.js"></script>
@@ -90,7 +90,6 @@
         for(var i = 0; i<entranceEl.length; i++){
             (function(i){
                 entranceEl[i].onclick = function(){
-                    $(gallerySelector).removeClass("hidden");
                     openSwipePhoto(items[i]);
                 }         
             })(i)
