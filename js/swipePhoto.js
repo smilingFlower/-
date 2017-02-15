@@ -119,12 +119,16 @@ var swipePhoto = function(gallerySelector,items,options){
             if (typeof translate === "undefined") {
                 return;
             }
+
+
         }
 
         var setWrapperTranslate = function(translate){
             if (typeof translate === "undefined") {
                 return;
             }
+
+
         }
 
         var touchstartFun = function(e){
@@ -146,16 +150,7 @@ var swipePhoto = function(gallerySelector,items,options){
             X = moveEndX - startX;
             Y = moveEndY - startY;
 
-            // console.log(X);
-            // console.log(Y);
-        }
-
-        var touchendFun = function(e){
-            console.log("touchend");
-            e.preventDefault();
-
             var moveDistanceY = Y < 0 ? -Y : Y;
-
 
             if (moveDistanceY > 50) {
                 return false;
@@ -167,7 +162,12 @@ var swipePhoto = function(gallerySelector,items,options){
                 }else if( X < -5 ){
                     console.log("向左滑动");
                 }
-            }
+            }            
+        }
+
+        var touchendFun = function(e){
+            console.log("touchend");
+            e.preventDefault();
 
         }
 
