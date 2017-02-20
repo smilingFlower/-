@@ -104,8 +104,7 @@ var swipePhoto = function(gallerySelector,items,options){
         Y,  //移动y的距离
         startTime,
         endTime,
-        direction;
-
+        time;
     var updateIndex = function(){
         
     }
@@ -115,7 +114,6 @@ var swipePhoto = function(gallerySelector,items,options){
     }
 
     var touchstartFun = function(e){           
-        console.log(e.target);            
         console.log("touchstart");
         e.preventDefault();
 
@@ -128,7 +126,6 @@ var swipePhoto = function(gallerySelector,items,options){
     }
 
     var touchmoveFun = function(e){
-        console.log(e.target);
         console.log("touchmove");
         e.preventDefault();
 
@@ -137,9 +134,9 @@ var swipePhoto = function(gallerySelector,items,options){
         moveEndX = e.targetTouches[0].pageX;
         moveEndY = e.targetTouches[0].pageY;
 
+
         X = Math.floor(moveEndX - startX);
         Y = Math.floor(moveEndY - startY);
-
         var moveDistanceY = Y < 0 ? -Y : Y;
 
         if (moveDistanceY > 50) {
@@ -147,7 +144,6 @@ var swipePhoto = function(gallerySelector,items,options){
         }
 
         if (direction === "horizontal") {
-            console.log("horizontal");
             if  ( X > 5 ) {
                 console.log("向右滑动");
                 if (currentIndex == 0) { //滑动到第一个元素，不再滑动
@@ -157,7 +153,6 @@ var swipePhoto = function(gallerySelector,items,options){
                 list[currentIndex].style.transform = "translate3d(" + (winW - X) +"px, 0, 0)";
                 list[currentIndex-1].style.webkitTransform = "translate3d(" + X +"px, 0, 0)";
                 list[currentIndex-1].style.transform = "translate3d(" + X +"px, 0, 0)";  
-                direction = "right";
             }else if( X < (-5) ){
                 console.log("向左滑动");
                 if (currentIndex == (list.length - 1)) { //滑动到第最后一个元素，不再滑动
@@ -167,61 +162,52 @@ var swipePhoto = function(gallerySelector,items,options){
                 list[currentIndex].style.transform = "translate3d(" + X +"px, 0, 0)";
                 list[currentIndex+1].style.webkitTransform = "translate3d(" + (winW + X) +"px, 0, 0)";
                 list[currentIndex+1].style.transform = "translate3d(" + (winW + X) +"px, 0, 0)";
-                direction = "left";
             }
-
-        }            
+        }        
     }
 
     var touchendFun = function(e){
-        console.log(e.target);            
         console.log("touchend");
         e.preventDefault();
 
         endTime = new Date() * 1;  //把时间转成ms
 
-        var time = 0; //动画的时间
+        if (direction === "horizontal") {
+            if  ( X > 5 ) {
+                console.log("向右滑动");
+                if (currentIndex == 0) { //滑动到第一个元素，不再滑动
+                    return false
+                }
 
-        if (direction === "right") {
-            // if (currentIndex == 0) {
-            //     return false;
-            // }
-
-            // if ( X < (winW / 3 * 2)) {
-            //     time = 1;
-            // }else{
-            //     time = .5;
-            // }
-
-            // //改变动画后所应该的位移值
-            // list[currentIndex].style.webkitTransform = 'translate3d('+ winW +'px, 0, 0)';
-            // list[currentIndex-1].style.webkitTransform = 'translate3d(0, 0, 0)';    
-
-            // list[currentIndex].style.webkitTransition = '-webkit-transform '+ time +'s ease-out';              
-            // list[currentIndex-1].style.webkitTransition = '-webkit-transform '+ time +'s ease-out'; 
+                list[currentIndex].style.webkitTransform = "translate3d(" + (-winW) +"px, 0, 0)";
+                list[currentIndex].style.transform = "translate3d(" + (-winW) +"px, 0, 0)";
+                list[currentIndex-1].style.webkitTransform = "translate3d(0, 0, 0)";
+                list[currentIndex-1].style.transform = "translate3d(0, 0, 0)";
 
 
-            // currentIndex--;
-        }else{
-            // if (currentIndex == (list.length - 1)) {
-            //     return false;
-            // }
+                //改变过渡的方式，从无动画变为有动画
+                list[currentIndex].style.webkitTransition = '-webkit-transform 0.2s ease-out';
+                list[currentIndex-1] && (list[currentIndex-1].style.webkitTransition = '-webkit-transform 0.2s ease-out');
 
-            // if ( -X < (winW / 3 * 2)) {
-            //     time = 1;
-            // }else{
-            //     time = .5;
-            // }  
+                currentIndex --;
+            }else if( X < (-5) ){
+                console.log("向左滑动");
+                if (currentIndex == (list.length - 1)) { //滑动到第最后一个元素，不再滑动
+                    return false
+                }
+                list[currentIndex].style.webkitTransform = "translate3d(" + (-winW) +"px, 0, 0)";
+                list[currentIndex].style.transform = "translate3d(" + (-winW) +"px, 0, 0)";
+                list[currentIndex+1].style.webkitTransform = "translate3d(0, 0, 0)";
+                list[currentIndex+1].style.transform = "translate3d(0, 0, 0)";
 
-            // //改变动画后所应该的位移值
-            // list[currentIndex].style.webkitTransform = 'translate3d('+ (-winW) +'px, 0, 0)';
-            // list[currentIndex+1].style.webkitTransform = 'translate3d(0, 0, 0)';    
+                //改变过渡的方式，从无动画变为有动画
+                list[currentIndex].style.webkitTransition = '-webkit-transform 0.2s ease-out';
+                list[currentIndex+1] && (list[currentIndex+1].style.webkitTransition = '-webkit-transform 0.2s ease-out'); 
+                currentIndex ++;               
+            }
+        }   
 
-            // list[currentIndex].style.webkitTransition = '-webkit-transform '+ time +'s ease-out';              
-            // list[currentIndex+1].style.webkitTransition = '-webkit-transform '+ time +'s ease-out';  
-            
-            // currentIndex++;
-        }
+
     }
 
     var bindEvent = function(){
