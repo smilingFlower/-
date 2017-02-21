@@ -76,43 +76,93 @@ var framework = {
             el.className = classes;
         }
         return el;
+    }, 
+
+    firstChild:function(selector){
+        if (selector.length <= 0) return;
+        var item;
+        for (var i = 0; i < selector.length; i++) {
+             if (selector[i].nodeType === 1) {
+                outer = selector[i];
+                return false;
+             }
+         } 
     },
+
+    removeElement(element){
+             var _parentElement = element.parentNode;
+             if(parentElement){
+                    parentElement.removeChild(element);
+             }
+    }    
 }
 
-/**
- * [swipePhoto description]
- * @param  {[type]} template [description]
- * @param  {[数组]} items     [数据]
- * @param  {[数组]} options  [配置信息]
- * @return {[type]}          [description]
- */
-var swipePhoto = function(gallerySelector,items,options){
+var Swipe = function(gallerySelector,options){
 
     var self = this,
-        direction = "horizontal",
-        outer = framework.getChildByClass(gallerySelector,"swiper-wrapper"), 
-        winW = window.innerWidth,
-        items = items,
-        list = [],
         currentIndex = 0,
+        outer = framework.firstChild(gallerySelector),
         target,
         startX,
         startY,
         moveEndX,
         moveEndY,
         X, //移动x的距离
-        Y,  //移动y的距离
-        photoNum = document.getElementsByClassName("photo-num")[0],  
-        indexNum = framework.getChildByClass(photoNum,"current-index"), 
-        allNum = framework.getChildByClass(photoNum,"all");      
+        Y;  //移动y的距离
+  
+    var _options = {
+        direction : "horizontal",
+        isOverlay : true,  //如果有背景，就说明有点击关闭滑动的页面的事件
+        isClose : true,
+        isPageNum : true,
+    }
+    framework.extend(_options, options);
 
-    var close = function(){
-        framework.addClass(gallerySelector,"hidden"); 
-        var overlay = document.getElementsByClassName("overlay")[0];
-        framework.addClass(overlay,"hidden");        
+    var addHtmlOverlay = function(){
+        var bodyEl = document.getElementsByName("body")[0];
+        var overlayEl = document.createElement('div');
+        overlayEl.className = "overlay";
+        bodyEl.appendChild(overlayEl);
     }
 
-    var touchstartFun = function(e){           
+    var addHtmlClose = function(){
+        var closeEl = document.createElement('div');
+        closeEl.className = "close";
+
+        outer.appendChild(closeEl);
+    }
+
+    var addHtmlPageNum = function(){
+        var pageNumEl = document.createElement('div');
+        pageNumEl.className = "page-num";
+        pageNumEl.innerHTML = '<span class="current-index">0</span>/<span class="all">0</span>' 
+        outer.appendChild(pageNumEl);
+    }
+
+    var updatePageNum = function(index,alllength){
+        var parent = document.getElementsByClassName("page-num")[0];
+        framework.getChildByClass("current-index").innerText = index;
+        framework.getChildByClass("all").innerText = alllength;
+    }
+
+    var close = function(){
+        framework.addClass(gallerySelector,"hidden");
+
+        if (options.isOverlay) {
+            framework.removeElement(document.getChildByClass("overlay")[0]);
+        }
+
+        if (options.isClose) {
+            framework.removeElement(framework.getChildByClass(outer,"close"));
+        }
+
+        if (options.isPageNum) {
+            framework.removeElement(framework.getChildByClass(outer,"page-num"));
+        }
+        
+    }
+
+    var touchstartFun = function(e){
         console.log("touchstart");
         e.preventDefault();
 
@@ -198,29 +248,23 @@ var swipePhoto = function(gallerySelector,items,options){
                 outer.style.webkitTransition = '-webkit-transform 0.2s ease-out';
 
                 currentIndex ++;               
-            }else{
+            }else if(options.isOverlay){
                 close();
             }
-            indexNum.innerText = currentIndex + 1;
             X = 0,Y = 0;
-        }   
 
+            if (options.isPageNum) {
+                updatePageNum((currentIndex + 1),items.length);        
+            }
+
+        }   
 
     }
 
     var bindEvent = function(){
         framework.bind(outer,'touchstart',touchstartFun);
         framework.bind(outer,'touchmove',touchmoveFun);
-        framework.bind(outer,'touchend',touchendFun);        
-    }
-
-    var addhtml = function(){
-        var parent = framework.getChildByClass(gallerySelector,"swiper-wrapper");
-        var html = "";
-        for(var i = 0; i< items.length; i++){
-            html += '<div class="swiper-slide" data='+i+'> <img src="'+ items[i] +'"></div>';
-        }
-        parent.innerHTML = html;
+        framework.bind(outer,'touchend',touchendFun);
     }
 
     var unbindEvent = function(){
@@ -230,53 +274,40 @@ var swipePhoto = function(gallerySelector,items,options){
     }
 
     var init = function(){
+        framework.removeClass(gallerySelector,"hidden");
         outer.style.transform = "translate3d(0,0,0)";
 
-        framework.removeClass(gallerySelector,"hidden");
-        var overlay = document.getElementsByClassName("overlay")[0];
-        framework.removeClass(overlay,"hidden");
-
-        addhtml();
-
-        var item = framework.getChildByClass(gallerySelector,"swiper-wrapper").childNodes;  
-        for (var i = 0; i < item.length; i++) {
-            if (framework.hasClass(item[i],"swiper-slide")) {
-                list.push(item[i]);
-                item[i].style.transform = "translate3d("+i * winW +"px,0,0)";
-            }
+        //是否需要黑色背景层
+        if (options.isOverlay) {
+            addHtmlOverlay();
         }
 
-        //初始化当前页
-        indexNum.innerText = 1;
-        allNum.innerText = list.length;
+        if (options.isClose) {
+            addHtmlClose();
+
+            var closeBtn = framework.getChildByClass(outer,"close");
+            closeBtn.onclick = function(){
+                close();
+            }         
+        }
+
+        if (options.isPageNum) {
+            addHtmlPageNum();   
+            updatePageNum(1,items.length);        
+        }
 
         bindEvent();
-
-        var closeBtn = document.getElementsByClassName("close")[0];
-        closeBtn.onclick = function(){
-            close();
-        }
 
     }
 
     var publicMethods = {
-        options:options,
+        options:_options,
         init:function(){
             init();
         }
     }
 
-    framework.extend(self, publicMethods); 
+    framework.extend(self, publicMethods);    
 }
-
-
-
-
-
-
-
-
-	
-
 
 

@@ -27,12 +27,14 @@
     <div class="page-ground">    
         <div class="page page1">  
             <div class="photo-thumbnail-wrap" id="photo-thumbnail-wrap">
-                <div class="item">
-                    <img src="images/1.jpg">
+                <div class="swiper-wrapper">
+                    <div class="item">
+                        <img src="images/1.jpg">
+                    </div>
+                    <div class="item">
+                        <img src="images/2.jpg">
+                    </div>                
                 </div>
-                <div class="item">
-                    <img src="images/2.jpg">
-                </div>                
             </div>
         </div>
     </div>
@@ -40,8 +42,6 @@
         <div class="swiper-wrapper">
                                               
         </div>
-        <div class="photo-num"><span class="current-index">0</span>/<span class="all">0</span></div>
-        <div class="close"></div>
     </div>  
     <div class="overlay hidden"></div>
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
@@ -49,6 +49,8 @@
 <script type="text/javascript">
     var entranceSelector = document.getElementById("photo-thumbnail-wrap");
     var gallerySelector = document.getElementById("swiper-container");
+
+    var gallery = new Swipe(entranceSelector);
 
     var items = [
         ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
@@ -59,6 +61,7 @@
         ["images/6.jpg","images/5.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
     ]
 
+
     //图片滑动
     var initSwipePhotoFromDOM = function(entranceSelector,gallerySelector,items){
 
@@ -66,13 +69,21 @@
             gallerySelector = gallerySelector,
             items = items;
 
-
-        var options = {
-            
+        var addhtml = function(){
+            var parent = parseElements(gallerySelector);
+            var html = "";
+            for(var i = 0; i< items.length; i++){
+                html += '<div class="swiper-slide" data='+i+'> <img src="'+ items[i] +'"></div>';
+            }
+            parent.innerHTML = html;
         }
 
-        var parseElements = function(gallerySelector){
-            var thumbEl = gallerySelector.childNodes,
+        var options = {
+            items: parseElements(parseElements(gallerySelector));
+        }
+
+        var parseElements = function(selector){
+            var thumbEl = selector.childNodes,
                 item = [];
 
             for(var i = 0; i<thumbEl.length; i++){
@@ -82,10 +93,10 @@
             }
 
             return item;
-        }    
+        }
 
         var openSwipePhoto = function(items){
-            var gallery = new swipePhoto(gallerySelector,items,options); 
+            var gallery = new swipePhoto(gallerySelector,options); 
             gallery.init();
         }
 
@@ -107,6 +118,7 @@
 
 
 </script>
+
 </body>
 </html>
 
