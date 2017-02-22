@@ -43,14 +43,11 @@
                                               
         </div>
     </div>  
-    <div class="overlay hidden"></div>
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
 <script type="text/javascript" src="js/swipePhoto.js"></script>
 <script type="text/javascript">
     var entranceSelector = document.getElementById("photo-thumbnail-wrap");
     var gallerySelector = document.getElementById("swiper-container");
-
-    var gallery = new Swipe(entranceSelector);
 
     var items = [
         ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
@@ -60,27 +57,12 @@
         ["images/5.jpg","images/6.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
         ["images/6.jpg","images/5.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
     ]
-
-
     //图片滑动
-    var initSwipePhotoFromDOM = function(entranceSelector,gallerySelector,items){
+    var initSwipePhotoFromPopUpDOM = function(entranceSelector,gallerySelector,items){
 
         var entranceSelector = entranceSelector,
             gallerySelector = gallerySelector,
             items = items;
-
-        var addhtml = function(){
-            var parent = parseElements(gallerySelector);
-            var html = "";
-            for(var i = 0; i< items.length; i++){
-                html += '<div class="swiper-slide" data='+i+'> <img src="'+ items[i] +'"></div>';
-            }
-            parent.innerHTML = html;
-        }
-
-        var options = {
-            items: parseElements(parseElements(gallerySelector));
-        }
 
         var parseElements = function(selector){
             var thumbEl = selector.childNodes,
@@ -95,13 +77,27 @@
             return item;
         }
 
-        var openSwipePhoto = function(items){
-            var gallery = new swipePhoto(gallerySelector,options); 
+        var template = function(items){
+            var html = "";
+            for(var i = 0; i< items.length; i++){
+                html += '<div class="swiper-slide"> <img src="'+ items[i] +'"></div>';
+            }
+
+            return html;
+        }
+
+
+        var openSwipePhoto = function(item){
+
+            var options = {
+                template: template(item),
+            }
+            var gallery = new Swipe(gallerySelector,options); 
             gallery.init();
         }
 
 
-        var entranceEl = parseElements(entranceSelector);
+        var entranceEl = parseElements(parseElements(entranceSelector)[0]);
         for(var i = 0; i<entranceEl.length; i++){
             (function(i){
                 entranceEl[i].onclick = function(){
@@ -111,11 +107,54 @@
         } 
 
     }
+    
+
+    var initSwipePhotoFromDOM = function(gallerySelector,items){
+
+        var gallerySelector = gallerySelector,
+            items = items;
+
+        var parseElements = function(selector){
+            var thumbEl = selector.childNodes,
+                item = [];
+
+            for(var i = 0; i<thumbEl.length; i++){
+                if (thumbEl[i].nodeType === 1) {
+                    item.push(thumbEl[i]);
+                }
+            }
+
+            return item;
+        }
+
+        var template = function(items){
+            var html = "";
+            for(var i = 0; i< items.length; i++){
+                html += '<div class="item"> <img src="'+ items[i] +'"></div>';
+            }
+
+            return html;
+        }
 
 
+        var openSwipePhoto = function(item){
 
-    initSwipePhotoFromDOM(entranceSelector,gallerySelector,items);
+            var options = {
+                template: template(item),
+                isOverlay : false,  
+                isClose : false,
+                isPageNum : false,                
+            }
+            var gallery = new Swipe(gallerySelector,options); 
+            gallery.init();
+        }
 
+        openSwipePhoto(items);
+    }
+    var items1 = ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
+    
+    initSwipePhotoFromDOM(entranceSelector,items1);
+    initSwipePhotoFromPopUpDOM(entranceSelector,gallerySelector,items);
 
 </script>
 

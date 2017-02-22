@@ -79,21 +79,23 @@ var framework = {
     }, 
 
     firstChild:function(selector){
-        if (selector.length <= 0) return;
+        if (selector.childNodes.length <= 0) return;
         var item;
-        for (var i = 0; i < selector.length; i++) {
-             if (selector[i].nodeType === 1) {
-                outer = selector[i];
-                return false;
+        for (var i = 0; i < selector.childNodes.length; i++) {
+             if (selector.childNodes[i].nodeType === 1) {
+                item = selector.childNodes[i];
+                break;
              }
          } 
+        return item;
     },
 
     removeElement(element){
-             var _parentElement = element.parentNode;
-             if(parentElement){
-                    parentElement.removeChild(element);
-             }
+        console.log(element);
+         var _parentElement = element.parentNode;
+         if(_parentElement){
+                _parentElement.removeChild(element);
+         }
     }    
 }
 
@@ -101,14 +103,19 @@ var Swipe = function(gallerySelector,options){
 
     var self = this,
         currentIndex = 0,
+        outerParent = gallerySelector,
         outer = framework.firstChild(gallerySelector),
+        list = [],
+        winW = window.innerWidth,
         target,
         startX,
         startY,
         moveEndX,
         moveEndY,
         X, //移动x的距离
-        Y;  //移动y的距离
+        Y,  //移动y的距离
+        startTime,
+        endTime;
   
     var _options = {
         direction : "horizontal",
@@ -118,46 +125,48 @@ var Swipe = function(gallerySelector,options){
     }
     framework.extend(_options, options);
 
+    var addHtml = function(tamplate){
+        outer.innerHTML = tamplate;
+    }
+
     var addHtmlOverlay = function(){
-        var bodyEl = document.getElementsByName("body")[0];
-        var overlayEl = document.createElement('div');
-        overlayEl.className = "overlay";
+        var bodyEl = document.body;
+        var overlayEl = framework.createEl("overlay");
         bodyEl.appendChild(overlayEl);
     }
 
     var addHtmlClose = function(){
-        var closeEl = document.createElement('div');
-        closeEl.className = "close";
+        var closeEl = framework.createEl("close");
 
-        outer.appendChild(closeEl);
+        outerParent.appendChild(closeEl);
     }
 
     var addHtmlPageNum = function(){
-        var pageNumEl = document.createElement('div');
-        pageNumEl.className = "page-num";
+        var pageNumEl =  framework.createEl("page-num");
         pageNumEl.innerHTML = '<span class="current-index">0</span>/<span class="all">0</span>' 
-        outer.appendChild(pageNumEl);
+        outerParent.appendChild(pageNumEl);
     }
 
     var updatePageNum = function(index,alllength){
-        var parent = document.getElementsByClassName("page-num")[0];
-        framework.getChildByClass("current-index").innerText = index;
-        framework.getChildByClass("all").innerText = alllength;
+        var parent = framework.getChildByClass(outerParent,"page-num");
+        framework.getChildByClass(parent,"current-index").innerText = index;
+        framework.getChildByClass(parent,"all").innerText = alllength;
     }
 
     var close = function(){
-        framework.addClass(gallerySelector,"hidden");
+        console.log("2222222222222");
+        framework.addClass(outerParent,"hidden");
 
-        if (options.isOverlay) {
-            framework.removeElement(document.getChildByClass("overlay")[0]);
+        if (_options.isOverlay) {
+            framework.removeElement(framework.getChildByClass(document.getElementsByTagName("body")[0],"overlay"));
         }
 
-        if (options.isClose) {
-            framework.removeElement(framework.getChildByClass(outer,"close"));
+        if (_options.isClose) {
+            framework.removeElement(framework.getChildByClass(outerParent,"close"));
         }
 
-        if (options.isPageNum) {
-            framework.removeElement(framework.getChildByClass(outer,"page-num"));
+        if (_options.isPageNum) {
+            framework.removeElement(framework.getChildByClass(outerParent,"page-num"));
         }
         
     }
@@ -165,6 +174,8 @@ var Swipe = function(gallerySelector,options){
     var touchstartFun = function(e){
         console.log("touchstart");
         e.preventDefault();
+
+        startTime = new Date() * 1; //把时间转成ms
 
         startX = e.targetTouches[0].pageX;
         startY = e.targetTouches[0].pageY;
@@ -193,7 +204,7 @@ var Swipe = function(gallerySelector,options){
             return false;
         }
 
-        if (direction === "horizontal") {
+        if (_options.direction === "horizontal") {
             if  ( X > 10 ) {
                 console.log("向右滑动");
                 if (currentIndex == 0) { //滑动到第一个元素，不再滑动
@@ -218,9 +229,15 @@ var Swipe = function(gallerySelector,options){
         console.log("touchend");
         e.preventDefault();
 
-        // endTime = new Date() * 1;  //把时间转成ms
+        endTime = new Date() * 1;  //把时间转成ms
+        var time = endTime - startTime;
 
-        if (direction === "horizontal") {
+        if (time < 250) {
+            _options.thouchFun ? _options.thouchFunx : close();
+            return false;
+        }        
+
+        if (_options.direction === "horizontal") {
             if  ( X > 10 ) {
                 console.log("向右滑动2");
                 if (currentIndex == 0) { //滑动到第一个元素，不再滑动
@@ -248,14 +265,14 @@ var Swipe = function(gallerySelector,options){
                 outer.style.webkitTransition = '-webkit-transform 0.2s ease-out';
 
                 currentIndex ++;               
-            }else if(options.isOverlay){
-                close();
             }
+
+            if (_options.isPageNum) {
+                updatePageNum((currentIndex + 1),items.length);
+            }
+
             X = 0,Y = 0;
 
-            if (options.isPageNum) {
-                updatePageNum((currentIndex + 1),items.length);        
-            }
 
         }   
 
@@ -274,34 +291,44 @@ var Swipe = function(gallerySelector,options){
     }
 
     var init = function(){
-        framework.removeClass(gallerySelector,"hidden");
-        outer.style.transform = "translate3d(0,0,0)";
+        addHtml(_options.template);
+
+        var itemDom = outer.childNodes;
+        for (var i = 0; i < itemDom.length; i++) {
+            if (itemDom[i].nodeType === 1) {
+                list.push(itemDom[i]);
+                itemDom[i].style.transform = "translate3d("+i * winW +"px,0,0)";
+            }
+        }        
 
         //是否需要黑色背景层
-        if (options.isOverlay) {
+        if (_options.isOverlay) {
             addHtmlOverlay();
         }
 
-        if (options.isClose) {
+        if (_options.isClose) {
             addHtmlClose();
 
-            var closeBtn = framework.getChildByClass(outer,"close");
+
+            var closeBtn = framework.getChildByClass(outerParent,"close");
             closeBtn.onclick = function(){
                 close();
             }         
         }
 
-        if (options.isPageNum) {
+        if (_options.isPageNum) {
             addHtmlPageNum();   
             updatePageNum(1,items.length);        
         }
+
+        framework.removeClass(outerParent,"hidden");
+        outer.style.transform = "translate3d(0,0,0)";
 
         bindEvent();
 
     }
 
     var publicMethods = {
-        options:_options,
         init:function(){
             init();
         }
