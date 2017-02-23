@@ -154,8 +154,10 @@ var Swipe = function(gallerySelector,options){
     }
 
     var close = function(){
-        console.log("2222222222222");
+        console.log("close");
         framework.addClass(outerParent,"hidden");
+
+        // outer.innerHTML = "";
 
         if (_options.isOverlay) {
             framework.removeElement(framework.getChildByClass(document.getElementsByTagName("body")[0],"overlay"));
@@ -169,6 +171,8 @@ var Swipe = function(gallerySelector,options){
             framework.removeElement(framework.getChildByClass(outerParent,"page-num"));
         }
         
+
+        // unbindEvent()
     }
 
     var touchstartFun = function(e){
@@ -189,7 +193,6 @@ var Swipe = function(gallerySelector,options){
         console.log("touchmove");
         e.preventDefault();
 
-        // startTime = new Date() * 1;  //把时间转成ms
 
         moveEndX = e.targetTouches[0].pageX;
         moveEndY = e.targetTouches[0].pageY;
@@ -197,7 +200,6 @@ var Swipe = function(gallerySelector,options){
 
         X = Math.floor(moveEndX - startX);
         Y = Math.floor(moveEndY - startY);
-        console.log(X);
         var moveDistanceY = Y < 0 ? -Y : Y;
 
         if (moveDistanceY > 50) {
@@ -230,14 +232,11 @@ var Swipe = function(gallerySelector,options){
         e.preventDefault();
 
         endTime = new Date() * 1;  //把时间转成ms
-        var time = endTime - startTime;
-
-        if (time < 250) {
-            _options.thouchFun ? _options.thouchFunx : close();
-            return false;
-        }        
+        var time = endTime - startTime;   
+        var index = currentIndex;  //点击的是那一个图片    
 
         if (_options.direction === "horizontal") {
+
             if  ( X > 10 ) {
                 console.log("向右滑动2");
                 if (currentIndex == 0) { //滑动到第一个元素，不再滑动
@@ -265,10 +264,13 @@ var Swipe = function(gallerySelector,options){
                 outer.style.webkitTransition = '-webkit-transform 0.2s ease-out';
 
                 currentIndex ++;               
+            }else{
+                _options.thouchFun ? _options.thouchFun(index) : close();
+                return false;
             }
 
             if (_options.isPageNum) {
-                updatePageNum((currentIndex + 1),items.length);
+                updatePageNum((currentIndex + 1),list.length);
             }
 
             X = 0,Y = 0;
@@ -278,17 +280,19 @@ var Swipe = function(gallerySelector,options){
 
     }
 
+
     var bindEvent = function(){
         framework.bind(outer,'touchstart',touchstartFun);
         framework.bind(outer,'touchmove',touchmoveFun);
         framework.bind(outer,'touchend',touchendFun);
     }
 
-    var unbindEvent = function(){
+    function unbindEvent(){
         framework.unbind(outer,'touchstart',touchstartFun);
         framework.unbind(outer,'touchmove',touchmoveFun);
         framework.unbind(outer,'touchend',touchendFun);           
     }
+
 
     var init = function(){
         addHtml(_options.template);
@@ -318,7 +322,7 @@ var Swipe = function(gallerySelector,options){
 
         if (_options.isPageNum) {
             addHtmlPageNum();   
-            updatePageNum(1,items.length);        
+            updatePageNum(1,list.length);        
         }
 
         framework.removeClass(outerParent,"hidden");

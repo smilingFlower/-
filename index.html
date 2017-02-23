@@ -28,12 +28,7 @@
         <div class="page page1">  
             <div class="photo-thumbnail-wrap" id="photo-thumbnail-wrap">
                 <div class="swiper-wrapper">
-                    <div class="item">
-                        <img src="images/1.jpg">
-                    </div>
-                    <div class="item">
-                        <img src="images/2.jpg">
-                    </div>                
+                                   
                 </div>
             </div>
         </div>
@@ -46,23 +41,14 @@
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
 <script type="text/javascript" src="js/swipePhoto.js"></script>
 <script type="text/javascript">
-    var entranceSelector = document.getElementById("photo-thumbnail-wrap");
-    var gallerySelector = document.getElementById("swiper-container");
 
-    var items = [
-        ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-        ["images/2.jpg","images/1.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-        ["images/3.jpg","images/4.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-        ["images/4.jpg","images/3.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-        ["images/5.jpg","images/6.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-        ["images/6.jpg","images/5.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
-    ]
+
     //图片滑动
-    var initSwipePhotoFromPopUpDOM = function(entranceSelector,gallerySelector,items){
+    var initSwipePhotoFromPopUpDOM = function(entranceSelector,gallerySelector,item){
 
         var entranceSelector = entranceSelector,
             gallerySelector = gallerySelector,
-            items = items;
+            item = item;
 
         var parseElements = function(selector){
             var thumbEl = selector.childNodes,
@@ -77,10 +63,10 @@
             return item;
         }
 
-        var template = function(items){
+        var template = function(item){
             var html = "";
-            for(var i = 0; i< items.length; i++){
-                html += '<div class="swiper-slide"> <img src="'+ items[i] +'"></div>';
+            for(var i = 0; i< item.length; i++){
+                html += '<div class="swiper-slide"> <img src="'+ item[i] +'"></div>';
             }
 
             return html;
@@ -96,22 +82,13 @@
             gallery.init();
         }
 
-
-        var entranceEl = parseElements(parseElements(entranceSelector)[0]);
-        for(var i = 0; i<entranceEl.length; i++){
-            (function(i){
-                entranceEl[i].onclick = function(){
-                    openSwipePhoto(items[i]);
-                }         
-            })(i)
-        } 
+        openSwipePhoto(item);
 
     }
-    
 
-    var initSwipePhotoFromDOM = function(gallerySelector,items){
+    var initSwipePhotoFromDOM = function(gallerySelector,item){
 
-        var gallerySelector = gallerySelector,
+        var selector = gallerySelector,
             items = items;
 
         var parseElements = function(selector){
@@ -127,13 +104,32 @@
             return item;
         }
 
-        var template = function(items){
+        var template = function(item){
             var html = "";
-            for(var i = 0; i< items.length; i++){
-                html += '<div class="item"> <img src="'+ items[i] +'"></div>';
+            for(var i = 0; i< item.length; i++){
+                html += '<div class="item"> <img src="'+ item[i] +'"></div>';
             }
 
             return html;
+        }
+
+
+        var thouchFun = function(index){
+            console.log("thouchFun");
+
+            var datas = [
+                ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+                ["images/2.jpg","images/1.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+                ["images/3.jpg","images/4.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+                ["images/4.jpg","images/3.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+                ["images/5.jpg","images/6.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
+                ["images/6.jpg","images/5.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
+            ]
+
+            var entranceSelector = document.getElementById("photo-thumbnail-wrap");
+            var gallerySelector = document.getElementById("swiper-container");
+
+            initSwipePhotoFromPopUpDOM(entranceSelector,gallerySelector,datas[index]);
         }
 
 
@@ -143,19 +139,20 @@
                 template: template(item),
                 isOverlay : false,  
                 isClose : false,
-                isPageNum : false,                
+                isPageNum : false,
+                thouchFun:thouchFun
             }
-            var gallery = new Swipe(gallerySelector,options); 
+            var gallery = new Swipe(selector,options); 
             gallery.init();
         }
 
-        openSwipePhoto(items);
+        openSwipePhoto(item);
     }
-    var items1 = ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
-    
-    initSwipePhotoFromDOM(entranceSelector,items1);
-    initSwipePhotoFromPopUpDOM(entranceSelector,gallerySelector,items);
 
+    var items1 = ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"];
+    var gallerySelector = document.getElementById("photo-thumbnail-wrap");
+    initSwipePhotoFromDOM(gallerySelector,items1);
+    
 </script>
 
 </body>
