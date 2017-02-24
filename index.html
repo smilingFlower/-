@@ -17,7 +17,6 @@
     <link rel="stylesheet" type="text/css" href="css/build/normalize.css">   
 
     <!-- 滑动图片样式 -->
-    <link href="css/default.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/swipePhoto.css">   
 
     <!-- 页面样式 -->
@@ -26,20 +25,11 @@
 </head>
 <body>
     <div class="page-ground"> 
-        <div class="page page1">             
-        </div>      
-        <div class="page page2">  
-            <div class="photo-thumbnail-wrap" id="photo-thumbnail-wrap">
-                <div class="swiper-wrapper">
-                </div>
-            </div>
-        </div>
+        <div class="page page1">    
+              
+        </div>             
     </div>
-    <div class="swiper-container hidden" id="swiper-container">  <!-- 图片预览容器 -->
-        <div class="swiper-wrapper">
-                                              
-        </div>
-    </div>  
+
 
 
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
@@ -47,122 +37,122 @@
 
 <script type="text/javascript" src="js/swipePhoto.js"></script>
 <script type="text/javascript">
-    //图片滑动
-    var initSwipePhotoFromPopUpDOM = function(entranceSelector,gallerySelector,item){
 
-        var entranceSelector = entranceSelector,
-            gallerySelector = gallerySelector,
-            item = item;
+    // var parseElements = function(selector){
+    //     var thumbEl = selector.childNodes,
+    //         item = [];
 
-        var parseElements = function(selector){
-            var thumbEl = selector.childNodes,
-                item = [];
+    //     for(var i = 0; i<thumbEl.length; i++){
+    //         if (thumbEl[i].nodeType === 1) {
+    //             item.push(thumbEl[i]);
+    //         }
+    //     }
 
-            for(var i = 0; i<thumbEl.length; i++){
-                if (thumbEl[i].nodeType === 1) {
-                    item.push(thumbEl[i]);
-                }
-            }
+    //     return item;
+    // }
 
-            return item;
-        }
-
-        var template = function(item){
-            var html = "";
-            for(var i = 0; i< item.length; i++){
-                html += '<div class="swiper-slide"> <img src="'+ item[i] +'"></div>';
-            }
-
-            return html;
-        }
+    // var pageParent = document.getElementsByClassName("page-ground")[0];
 
 
-        var openSwipePhoto = function(item){
+    // function SlideUpDown(target){
+    //     var startX,
+    //         startY,
+    //         endX,
+    //         endY,
+    //         X,
+    //         Y,
+    //         stratTime,
+    //         endTim,
+    //         currentIndex = 0,
+    //         target = target,
+    //         items = parseElements(target),
+    //         winH = window.innerHeight;
 
-            var options = {
-                template: template(item),
-            }
-            var gallery = new Swipe(gallerySelector,options); 
-            gallery.init();
-        }
+    //     var touchStartFun = function(e){
+    //         e.preventDefault();
 
-        openSwipePhoto(item);
+    //         startTime = new Date() * 1;
 
-    }
+    //         stratX = e.targetTouches[0].pageX;
+    //         startY = e.targetTouches[0].pageY;
 
-    var initSwipePhotoFromDOM = function(gallerySelector,item){
+    //     }
 
-        var selector = gallerySelector,
-            items = items;
+    //     var touchMoveFun = function(e){
+    //         var dDis = Math.abs(e.touches[0].pageX - startX) - Math.abs(e.touches[0].pageY - startY);
+    //         if (dDis < 0) return false;         
+    //     }
 
-        var parseElements = function(selector){
-            var thumbEl = selector.childNodes,
-                item = [];
+    //     var touchEndFun = function(e){
+    //         console.log(e);
+    //         e.preventDefault();
 
-            for(var i = 0; i<thumbEl.length; i++){
-                if (thumbEl[i].nodeType === 1) {
-                    item.push(thumbEl[i]);
-                }
-            }
+    //         endTime = new Date() * 1;
+    //         var time = endTime - stratTime;
 
-            return item;
-        }
+    //         var index;
 
-        var template = function(item){
-            var html = "";
-            for(var i = 0; i< item.length; i++){
-                html += '<div class="item"> <img src="'+ item[i] +'"></div>';
-            }
+    //         endX = e.changedTouches[0].pageX;
+    //         endY = e.changedTouches[0].pageY;
 
-            return html;
-        }
+    //         X = endX - startX;
+    //         Y = endY - startY;
 
-
-        var thouchFun = function(index){
-            console.log("thouchFun");
-
-            var datas = [
-                ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-                ["images/2.jpg","images/1.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-                ["images/3.jpg","images/4.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-                ["images/4.jpg","images/3.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-                ["images/5.jpg","images/6.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"],
-                ["images/6.jpg","images/5.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]
-            ]
-
-            var entranceSelector = document.getElementById("photo-thumbnail-wrap");
-            var gallerySelector = document.getElementById("swiper-container");
-
-            initSwipePhotoFromPopUpDOM(entranceSelector,gallerySelector,datas[index]);
-        }
+    //         if ( Y > 10 ) {
+    //             if (currentIndex == 0) {
+    //                 return false;
+    //             }
+    //             index = currentIndex - 1;
+    //         }else if(Y < -10){
+    //             if (currentIndex == (items.length - 1)) {
+    //                 return false;
+    //             }
+    //             index = currentIndex + 1;
+    //         }else{
+    //             return false;
+    //         }
 
 
-        var openSwipePhoto = function(item){
+    //         items[currentIndex].style.top = ( Y > 10 ? winH : -winH ) + "px";
+    //         items[index].style.top = 0;
 
-            var options = {
-                template: template(item),
-                isOverlay : false,  
-                isClose : false,
-                isPageNum : false,
-                thouchFun:thouchFun
-            }
-            var gallery = new Swipe(selector,options); 
-            gallery.init();
-        }
+    //         //改变过渡的方式，从无动画变为有动画
+    //         items[currentIndex].style.webkitTransition = 'top 0.2s ease-out';
+    //         items[index].style.webkitTransition = 'top 0.2s ease-out';
 
-        openSwipePhoto(item);
-    }
+    //         currentIndex = index;
+    //     } 
 
-    var items1 = ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"];
-    var gallerySelector = document.getElementById("photo-thumbnail-wrap");
-    initSwipePhotoFromDOM(gallerySelector,items1);
+    //     function bindEvent(){
+    //         framework.bind(target,'touchstart',touchStartFun);
+    //         framework.bind(target,'touchmove',touchMoveFun);
+    //         framework.bind(target,'touchend',touchEndFun);
+    //     }
+
+    //     function unbindEvent(){
+    //         framework.unbind(target,'touchstart',touchStartFun);
+    //         framework.unbind(target,'touchmove',touchMoveFun);
+    //         framework.unbind(target,'touchend',touchEndFun);           
+    //     }        
+
+    //     function init(){
+    //         for(var i = 0; i<items.length; i++){
+    //             items[i].style.top = winH * i + "px";
+    //         }
+
+    //         bindEvent();
+    //     }
+
+    //     init();
+    // }
+
+    // SlideUpDown(pageParent);
+
     
 </script>
 
 </body>
 </html>
-
-
 
 
 <!-- 注意：

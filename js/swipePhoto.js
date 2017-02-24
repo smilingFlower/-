@@ -115,7 +115,8 @@ var Swipe = function(gallerySelector,options){
         X, //移动x的距离
         Y,  //移动y的距离
         startTime,
-        endTime;
+        endTime,
+        dDis;
   
     var _options = {
         direction : "horizontal",
@@ -207,6 +208,9 @@ var Swipe = function(gallerySelector,options){
             return false;
         }
 
+        dDis = Math.abs(e.touches[0].pageX - startX) - Math.abs(e.touches[0].pageY - startY);
+        if (dDis < 0) return false;
+
         if (_options.direction === "horizontal") {
             if  ( X > 10 ) {
                 console.log("向右滑动");
@@ -238,6 +242,8 @@ var Swipe = function(gallerySelector,options){
 
         if (_options.direction === "horizontal") {
 
+            if (dDis < 0) {return false}       
+
             if  ( X > 10 ) {
                 console.log("向右滑动2");
                 if (currentIndex == 0) { //滑动到第一个元素，不再滑动
@@ -266,9 +272,10 @@ var Swipe = function(gallerySelector,options){
 
                 currentIndex ++;               
             }else{
-                _options.thouchFun ? _options.thouchFun(index) : close();
-                return false;
+                _options.thouchFun ? _options.thouchFun(index) : close();   
+                return false;             
             }
+
 
             if (_options.isPageNum) {
                 updatePageNum((currentIndex + 1),list.length);

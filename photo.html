@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>3d相册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+
+
+    <!-- 在引入lib-flexible需要执行的JS之前，可以手动设置meta来控制dpr值 -->
+    <meta content="maximum-dpr=2" name="flexible" />
+    <!-- 淘宝移动自适应js -->
+    <script type="text/javascript" src="js/build/flexible_css.js"></script>
+    <script type="text/javascript" src="js/build/flexible.js"></script>
+
+
+    <!-- 重置浏览器样式 -->
+    <link rel="stylesheet" type="text/css" href="css/build/normalize.css">   
+
+    <!-- 滑动图片样式 -->
+    <link rel="stylesheet" type="text/css" href="css/swipePhoto.css">   
+
+    <!-- 页面样式 -->
+    <link rel="stylesheet" type="text/css" href="css/main.css">   
+
+</head>
+<body>
+    <div class="page-ground">      
+        <div class="page page1">  
+            <div class="photo-thumbnail-wrap" id="photo-thumbnail-wrap">
+                <div class="swiper-wrapper">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="swiper-container hidden" id="swiper-container">  <!-- 图片预览容器 -->
+        <div class="swiper-wrapper">
+                                              
+        </div>
+    </div>  
+
+
+<script type="text/javascript" src="js/build/zepto.min.js"></script>
+
+
+<script type="text/javascript" src="js/swipePhoto.js"></script>
+<script type="text/javascript">
+
+    var parseElements = function(selector){
+        var thumbEl = selector.childNodes,
+            item = [];
+
+        for(var i = 0; i<thumbEl.length; i++){
+            if (thumbEl[i].nodeType === 1) {
+                item.push(thumbEl[i]);
+            }
+        }
+
+        return item;
+    }
+
+
+    //图片滑动
+    var initSwipePhotoFromPopUpDOM = function(entranceSelector,gallerySelector,item){
+
+        var entranceSelector = entranceSelector,
+            gallerySelector = gallerySelector,
+            item = item;
+
+        var parseElements = function(selector){
+            var thumbEl = selector.childNodes,
+                item = [];
+
+            for(var i = 0; i<thumbEl.length; i++){
+                if (thumbEl[i].nodeType === 1) {
+                    item.push(thumbEl[i]);
+                }
+            }
+
+            return item;
+        }
+
+        var template = function(item){
+            var html = "";
+            for(var i = 0; i< item.length; i++){
+                html += '<div class="swiper-slide"> <img src="'+ item[i].src +'"></div>';
+            }
+
+            return html;
+        }
+
+
+        var openSwipePhoto = function(item){
+
+            var options = {
+                template: template(item),
+            }
+            var gallery = new Swipe(gallerySelector,options); 
+            gallery.init();
+        }
+
+        openSwipePhoto(item);
+
+    }
+
+
+    var initSwipePhotoFromDOM = function(gallerySelector,item){
+
+        var selector = gallerySelector,
+            items = items;
+
+        var template = function(item){
+            var html = "";
+            for(var i = 0; i< item.length; i++){
+                html += '<div class="item"> <img src="'+ item[i].src +'"><p>'+ item[i].introduce +'</p></div>';
+            }
+
+            return html;
+        }
+
+
+        var thouchFun = function(index){
+            console.log("thouchFun");
+
+            var datas = [
+                [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"墨已入水渡一池青花"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"揽五分红霞采竹回家"
+                    },                
+                    {
+                        src:"images/3.jpg",
+                        introduce:"悠悠风来 埋一地桑麻"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"一身袈裟 把相思放下"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"十里桃花待嫁的年华"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"凤冠的珍珠 挽进头发"
+                    }                     
+                ],
+                [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"檀香拂过玉镯弄轻纱"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"空留一盏 芽色的清茶"
+                    },                    
+                    {
+                        src:"images/3.jpg",
+                        introduce:"倘若我心中的山水"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"你眼中都看到"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"你眼中都看到"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"怎知那浮生一片草"
+                    }                     
+                ],
+                [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"岁月催人老"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"风月花鸟 一笑尘缘了"
+                    },                    
+                    {
+                        src:"images/3.jpg",
+                        introduce:"十里桃花待嫁的年华"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"凤冠的珍珠 挽进头发"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"檀香拂过玉镯弄轻纱"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"空留一盏 芽色的清茶"
+                    }                     
+                ],
+                [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"倘若我心中的山水"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"你眼中都看到"
+                    },                    
+                    {
+                        src:"images/3.jpg",
+                        introduce:"我便一步一莲花祈祷"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"怎知那浮生一片草"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"岁月催人老"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"风月花鸟 一笑尘缘了"
+                    }                     
+                ], 
+                [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"倘若我心中的山水 你眼中都看到"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"我便一步一莲花祈祷"
+                    },                    
+                    {
+                        src:"images/3.jpg",
+                        introduce:"怎知那浮生一片草 岁月催人老"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"风月花鸟 一笑尘缘了"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"怎知那浮生一片草 岁月催人老"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"风月花鸟 一笑尘缘了"
+                    }                     
+                ],
+                [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"倘若我心中的山水"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"你眼中都看到"
+                    },                    
+                    {
+                        src:"images/3.jpg",
+                        introduce:"我便一步一莲花祈祷"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"怎知那浮生一片草"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"岁月催人老"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"风月花鸟 一笑尘缘了"
+                    }                     
+                ],    
+            ]
+
+            var entranceSelector = document.getElementById("photo-thumbnail-wrap");
+            var gallerySelector = document.getElementById("swiper-container");
+
+            initSwipePhotoFromPopUpDOM(entranceSelector,gallerySelector,datas[index]);
+        }
+
+
+        var openSwipePhoto = function(item){
+
+            var options = {
+                template: template(item),
+                isOverlay : false,  
+                isClose : false,
+                isPageNum : false,
+                thouchFun:thouchFun
+            }
+            var gallery = new Swipe(selector,options); 
+            gallery.init();
+        }
+
+        openSwipePhoto(item);
+    }
+
+
+    var items1 = [
+                    {
+                        src:"images/1.jpg",
+                        introduce:"墨已入水渡一池青花"
+                    },
+                    {
+                        src:"images/2.jpg",
+                        introduce:"揽五分红霞采竹回家"
+                    },                
+                    {
+                        src:"images/3.jpg",
+                        introduce:"悠悠风来 埋一地桑麻"
+                    },
+                    {
+                        src:"images/4.jpg",
+                        introduce:"一身袈裟 把相思放下"
+                    },                     
+                    {
+                        src:"images/5.jpg",
+                        introduce:"十里桃花待嫁的年华"
+                    },
+                    {
+                        src:"images/6.jpg",
+                        introduce:"凤冠的珍珠 挽进头发"
+                    }
+                ];
+    var gallerySelector = document.getElementById("photo-thumbnail-wrap");
+    initSwipePhotoFromDOM(gallerySelector,items1);
+    
+</script>
+
+</body>
+</html>
+
+
+
+
+<!-- 注意：
+
+手指在滑动整个屏幕时，会影响浏览器的行为，比如滚动和缩放。所以在调用touch事件时，要注意禁止缩放和滚动。
+
+1.禁止缩放
+
+通过meta元标签来设置。
+
+<meta name="viewport" content="target-densitydpi=320,width=640,user-scalable=no">
+
+2.禁止滚动
+
+preventDefault是阻止默认行为，touch事件的默认行为就是滚动。
+
+event.preventDefault(); -->
