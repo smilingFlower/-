@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="css/build/normalize.css">   
 
     <!-- 滑动图片样式 -->
+    <link href="css/default.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/swipePhoto.css">   
 
     <!-- 页面样式 -->
@@ -24,11 +25,12 @@
 
 </head>
 <body>
-    <div class="page-ground">    
-        <div class="page page1">  
+    <div class="page-ground"> 
+        <div class="page page1">             
+        </div>      
+        <div class="page page2">  
             <div class="photo-thumbnail-wrap" id="photo-thumbnail-wrap">
                 <div class="swiper-wrapper">
-                                   
                 </div>
             </div>
         </div>
@@ -38,11 +40,13 @@
                                               
         </div>
     </div>  
+
+
 <script type="text/javascript" src="js/build/zepto.min.js"></script>
+
+
 <script type="text/javascript" src="js/swipePhoto.js"></script>
 <script type="text/javascript">
-
-
     //图片滑动
     var initSwipePhotoFromPopUpDOM = function(entranceSelector,gallerySelector,item){
 

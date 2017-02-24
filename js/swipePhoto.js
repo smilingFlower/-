@@ -57,7 +57,7 @@ var framework = {
     }, 
 
     bind:function(target,eventtype,listener,unbind){  
-        var methodName = unbind ? "remove" : "add" + "EventListener";
+        var methodName = (unbind ? "remove" : "add") + "EventListener";
         var type = eventtype.split(" ");
         for(var i = 0; i < type.length; i++){
             if (type[i]) {
@@ -171,8 +171,9 @@ var Swipe = function(gallerySelector,options){
             framework.removeElement(framework.getChildByClass(outerParent,"page-num"));
         }
         
+        console.log(outer);
 
-        // unbindEvent()
+        unbindEvent()
     }
 
     var touchstartFun = function(e){
